@@ -1,5 +1,45 @@
 \documentclass[twoside]{article}
 \usepackage{aistats2016}
+\usepackage{graphicx}
+\graphicspath{{picF/}}
+\usepackage{amsmath,amssymb,amsbsy,amsfonts,amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,positioning,fit}
+
+\newcommand{\vvmK}{\dot{\eta}}
+\newcommand{\vvmW}{\dot{\zeta}}
+\newcommand{\vvmDK}{\dot{\alpha}}
+\newcommand{\vvmKW}{\dot{\beta}}
+\newcommand{\vvmbDK}{\bar{\alpha}}
+\newcommand{\vvmbKW}{\bar{\beta}}
+\newcommand{\vvmDWK}{\mu}
+\newcommand{\pmK}{\eta}
+\newcommand{\pmW}{\zeta}
+\newcommand{\vmK}{\alpha}
+\newcommand{\vmW}{\beta}
+\newcommand{\vmDK}{\theta}
+\newcommand{\vmKW}{\phi}
+
+\newcommand{\pr}{\mathbf{p}}
+\newcommand{\dd}{\mathbf{d}}
+\newcommand{\divergence}{\mathbb{K}}
+\newcommand{\entropy}{\mathbb{H}}
+\newcommand{\expectation}{\mathbb{E}}
+\newcommand{\carac}[1]{\mathbb{I}[{#1}]}
+\newcommand{\mbeta}{\mathbf{Boojum}}
+\newcommand{\cpnt}[2]{{#1}^{(\!{#2}\!)}}
+\newcommand{\assignn}{\longleftarrow}
+\newcommand{\assign}[1]{\underset{\textbf{[#1]}}{\longleftarrow}}
+\newcommand{\ruleref}[1]{\textbf{[#1]}}
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\tikzset{BNVar/.style={circle,draw}}
+\tikzset{BNVarDiscrete/.style={rectangle,draw}}
+\tikzset{BNObserved/.style={fill=black!15}}
+
 
 % If your paper is accepted, change the options for the package
 % aistats2016 as follows:
@@ -44,6 +84,7 @@
 \section{Related work}
 \input{RelatedWork}
 \section{A conjugate prior for the Dirichlet distribution}
+\input{HuntingSnark}
 \section{Fully variational Bayes for Latent Dirichlet Allocation}
 \section{Experiments}
 \section{Discussion}

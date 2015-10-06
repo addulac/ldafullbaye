@@ -9,3 +9,6 @@
 *.nav
 *.snm
 *.vrb
+*.synctex.gz
+*~
+
