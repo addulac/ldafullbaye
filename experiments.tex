@@ -1,0 +1,10 @@
+
+In order to evaluate our model we ran experiments over two corpus to compare the typical LDA and his fully bayesian formulation. We uesd a 20 news groups dataset and a nips 2012 set of articles. Each of them were divided into a training and test set corpus. We fit both a classical LDA model and the full variational LDA using the training set. The test set was used to assert to convergence of the training phase by computing the perplexity of the model. To compute it we follow a fold-in procedure and  use the approximation in (Asuncion, 2009) to compute the perplexity. Hence the topic-word distribution is fit on the learning set and the document-topic distribution is evaluated on the testing set, thus the perplexity of the model is computed as follow: 
+\[ \log p(x^{test}) = \sum_{jw} N_{jw} \log \frac{1}{S} \sum_s \sum_k \theta^s_{kj} \phi^s_{wk} \]
+
+Each inference procedure was run over 50 iterations and reproduced 10 times to provide a stability measure. Therefore, the figures show the mean perplexity for each and variance for each iterations.
+
+
+alpla/eta optimization ?
+
+training set -- K = 6/20
