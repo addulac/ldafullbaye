@@ -1,0 +1,143 @@
+The posterior probability given by~(\ref{eqn:logprobtrue}) does not admit an analytical expression. The VB method tries to approximate it, by projecting it onto a simpler space $\mathcal{C}$ of probability distributions, namely that of distributions $q$ of the form
+\begin{equation}
+\label{eqn:probvar}
+\begin{array}{l}
+q(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_I) = \cpnt{q}{K}(\vmK_K)\cpnt{q}{W}(\vmW_W)\\
+\;\;\;\prod_{d\in D}q_d(\vmDK_{dK})\prod_{k\in K}q_k(\vmKW_{kW})
+\prod_{i\in I}q_i(z_i)
+\end{array}
+\end{equation}
+Hence, in the variational model, the variables $\vmK_K,\vmW_W,\{\vmDK_{dK}\}_{d\in D},\{\vmKW_{kW}\}_{k\in K},\{z_i\}_{i\in I}$ are assumed independent.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The VB method}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The VB method solves the following optimisation problem:
+\begin{eqnarray}
+\label{eqn:KLmin}
+q^* & = & \arg\min_{q\in\mathcal{C}}\divergence(q,\tilde{p})
+\hspace{.3cm}\textrm{where}\hspace{.3cm}\tilde{p}=p|w_Id_I
+\end{eqnarray}
+Hence $q^*$ is the distribution of class $\mathcal{C}$, i.e. decomposable according to~(\ref{eqn:probvar}), which is closest, for the KL-divergence, to the posterior distribution $\tilde{p}$ given by~(\ref{eqn:logprobtrue}). VB computes an estimate $\dot{q}$ of $q^*$ in $\mathcal{C}$. It proceeds by simple coordinate descent, along the components $\dot{q}_X$, one for each independent variable $X$ in~(\ref{eqn:probvar}). The update, at each step of the coordinate descent focussing on variable $X$, is given by
+\begin{eqnarray}
+\label{eqn:vbcore}
+\dot{q}_X(x) &\assignn\propto& \exp\expectation_{y\sim \dot{q}_{\neg X}}[\log\tilde{p}(x,y)]
+\end{eqnarray}
+where the expectation is taken over the set $\neg X$ of all the independent variables in~(\ref{eqn:probvar}) other than $X$. Hence, the estimate $\dot{q}$ converges to $q^*$, or at least to a local minimum of $\divergence(q,\tilde{p})$, taken to be an approximation of $\tilde{p}$. When the right-hand side in~(\ref{eqn:vbcore}) does not have an analytical expression, VB uses an additional approximation, by {\em externally} constraining the estimate $\dot{q}_X$ to be in a specific class of distributions. Typically, one may want to constrain $\dot{q}_X$ to be a Dirac distribution with some parameter $\dot{\pi}_X$ and the update becomes
+\begin{eqnarray}
+\label{eqn:vbcore-Dirac}
+\dot{\pi}_X &\assignn& \arg\max_x\expectation_{y\sim \dot{q}_{\neg X}}[\log\tilde{p}(x,y)]
+\end{eqnarray}
+The right-hand side of~(\ref{eqn:vbcore-Dirac}) is the mode of the right-hand side distribution in~(\ref{eqn:vbcore}), since the closest Dirac approximation of any distribution is the Dirac at its mode.
+
+In the case of the LDA model, it is well known that the choice of conjugate priors (for variable $\vmDK_{DK}$ and $\vmKW_{KW}$) lead to update rules~(\ref{eqn:vbcore}) which {\em naturally} constrain the variational distributions to the following forms\footnote{To avoid the multiplication of Greek letters, we denote the variational parameters with the same letter as the corresponding model variables, decorated with a dot.}:
+\[
+\begin{array}{l@{\hspace{.3cm}}l}
+\forall d\in D& \dot{q}_d(\vmDK_K) = \mathbf{Dirichlet}(\vmDK_K;\vvmDK_{dK}) \\
+\forall k\in K& \dot{q}_k(\vmKW_W) = \mathbf{Dirichlet}(\vmKW_W;\vvmKW_{kW})
+\end{array}
+\]
+Furthermore, $\dot{q}_i$ is by construction a categorical distribution, with some parameter $\vvmDWK_{iK}$. However, the resulting updates do not differentiate between the distributions $\dot{q}_i$ where $d_i,w_i$ are identical, i.e. multiple occurrences of the same word in the same document. Hence, the variational parameter $\vvmDWK_{IK}$ can be replaced by a parameter $\vvmDWK_{DWK}$ such that $\vvmDWK_{iK}=\vvmDWK_{d_iw_iK}$ for all $i\in I$. Likewise, the observation $d_I,w_I$ can be summarised by the sufficient statistics $n_{DW}$, which is the document-word count matrix:
+\begin{eqnarray*}
+n_{dw} & \triangleq & |\{i\in I|d_i=d,w_i=w\}|
+\end{eqnarray*}
+Finally, the updates given by~(\ref{eqn:vbcore}) applied to the LDA model are summarised in Figure~\ref{fig:ldaupdates}, where the different updates are given labels (in brackets under the arrow) for reference purpose. For clarity sake, we have introduced the intermediate variational quantities $\vvmbDK_{DK}$ and $\vvmbKW_{KW}$ defined by
+\[
+\vvmbDK_{dk}\triangleq\expectation_{\vmDK_K\sim\dot{q}_d}[-\log\vmDK_k]
+\hspace{.3cm}
+\vvmbKW_{kw}\triangleq\expectation_{\vmKW_W\sim\dot{q}_k}[-\log\vmKW_w]
+\]
+which have a simple analytical expression. One recognises in Figure~\ref{fig:ldaupdates} the standard updates of the LDA model, except maybe for the bottom two $\ruleref{d}$ and $\ruleref{w}$, discussed below.
+\begin{figure*}
+\[
+\begin{array}{|rcl@{\hspace{1cm}}rcl|}
+\hline
+&&&&& \\[-.35cm]
+\multicolumn{6}{|c|}{
+\begin{array}{rcl}
+\vvmDWK_{dwk} & \assign{K}\propto & \exp-(\vvmbDK_{dk}+\vvmbKW_{kw})
+\end{array}
+} \\
+\vvmbDK_{dk} & \assignn & \Psi(\sum_{k'}\vvmDK_{dk'})-\Psi(\vvmDK_{dk}) &
+\vvmbKW_{kw} & \assignn & \Psi(\sum_{w'}\vvmKW_{kw'})-\Psi(\vvmKW_{kw})\\
+\vvmDK_{dk} & \assign{D} & \expectation[\cpnt{\dot{q}}{K}]_k+\sum_wn_{dw}\vvmDWK_{dwk} &
+\vvmKW_{kw} & \assign{W} & \expectation[\cpnt{\dot{q}}{W}]_w+\sum_dn_{dw}\vvmDWK_{dwk} \\
+&&&&& \\
+\cpnt{\dot{q}}{K} & \assign{d}\propto & \cpnt{p}{K}\mbeta(-D,\sum_d\vvmbDK_{dK}) &
+\cpnt{\dot{q}}{W} & \assign{w}\propto & \cpnt{p}{W}\mbeta(-K,\sum_k\vvmbKW_{kW})\\
+\hline
+\end{array}
+\]
+\caption{\label{fig:ldaupdates}Generic variational updates for the LDA model.}
+\[
+\begin{array}{|rcl@{\hspace{1cm}}rcl|}
+\hline
+&&&&& \\[-.35cm]
+\vvmDK_{dk} & \assign{D} & \vvmK_k +\sum_wn_{dw}\vvmDWK_{dwk} &
+\vvmKW_{kw} & \assign{W} & \vvmW_w^{-1}+\sum_dn_{dw}\vvmDWK_{dwk} \\
+\vvmK_K & \assign{d} & \boldsymbol{\Phi}(\frac{1}{D}\sum_d\vvmbDK_{dK}) &
+\vvmW_w & \assign{w} & \pmW_w+\sum_k\vvmbKW_{kw} \\
+\hline
+\end{array}
+\]
+\caption{\label{fig:ldaupdates-variant}Updates $\ruleref{D},\ruleref{W},\ruleref{d},\ruleref{w}$ in our variants: one is equivalent to the EM type 2 estimation method and the other is original; for the sake of presentation, we apply the former to the document-topic side and the latter to the topic-word side, but they are interchangeable, or the same variant could be applied to both sides.}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Treatment of the parameters $\cpnt{q}{K}$ and $\cpnt{q}{W}$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Let's first justify the update~$\ruleref{d}$ of $\cpnt{\dot{q}}{K}$ (the same applies to update~$\ruleref{w}$ of $\cpnt{\dot{q}}{W}$). By eliminating from~(\ref{eqn:logprobtrue}) all the terms which do not involve $\vmK_K$, hence contribute only a multiplicative constant, and taking expectations on the others, Equation~(\ref{eqn:vbcore}) becomes
+\begin{small}
+\begin{eqnarray*}
+\cpnt{\dot{q}}{K}(\vmK_K)
+& \assignn\propto &
+\exp\log\cpnt{p}{K}(\vmK_K)-D\log\mathcal{B}(\vmK_K)\\
+& + & \sum_d\expectation_{\vmDK_{dK}\sim\dot{q}_d}[\sum_k\vmK_k\log\vmDK_{dk}]\\
+& = &
+\cpnt{p}{K}(\vmK_K)\mathcal{B}(\vmK_K)^{-D}\exp\sum_{dk}-\vmK_k\vvmbDK_{dk}\\
+& \propto &
+\cpnt{p}{K}(\vmK_K)\mbeta(\vmK_K;-D,\sum_d\vvmbDK_{dK})
+\end{eqnarray*}
+\end{small}
+where $\mbeta$ is the conjugate distribution of the Dirichlet in the exponential family introduced in Section~\ref{sec:huntingsnark}. To proceed further, we need to choose the parameters $\cpnt{p}{K},\cpnt{p}{W}$ (the model priors) so as to make the updates of $\cpnt{\dot{q}}{K},\cpnt{\dot{q}}{W}$ concrete. Since the two variables $\vmK_K$ and $\vmW_W$ are parameters of Dirichlet distributions, on $\vmDK_{DK}$ and $\vmKW_{KW}$ respectively, we naturally choose their modelling distributions $\cpnt{p}{K},\cpnt{p}{W}$ in the conjugate class of Dirichlet, namely $\mbeta$. This {\em naturally} ensures that the corresponding variational distributions $\cpnt{\dot{q}}{K},\cpnt{\dot{q}}{W}$ are also in that class.
+
+We first show that the so called EM type 2 hyper-parameter estimation, which has been proposed for VB LDA, is in fact a special case of this approach. Indeed, EM in general is known to be a special case of VB, and what we give here is just the pure VB presentation of the method, leading to the same updates. In VB, the method amounts to choosing an ``uninformative'' $\cpnt{p}{K}$, i.e. $\cpnt{p}{K}\propto1$, which is also the improper distribution $\mbeta(0,0)$. Reporting in~$\ruleref{d}$, this {\em naturally} constrains the distribution $\cpnt{\dot{q}}{K}$ to be equal to $\mbeta(-D,\sum_d\vvmbDK_{dK})$. However, update~$\ruleref{D}$ requires the computation of its expectation, which is intractable. Instead, $\cpnt{\dot{q}}{K}$ is {\em externally} constrained to be a Dirac distribution, hence we can apply Equation~(\ref{eqn:vbcore-Dirac}):
+\[
+\begin{array}{rcl}
+\multicolumn{3}{c}{
+\begin{array}{c@{\hspace{1cm}}c}
+\cpnt{p}{K}\propto1 &
+\cpnt{\dot{q}}{K} = \mathbf{Dirac}(\vvmK_K)
+\end{array}
+}\\
+\vvmDK_{dk} & \assignn & \vvmK_k+\sum_wn_{dw}\vvmDWK_{dwk} \\
+\vvmK_K & \assignn & \arg\max\mbeta(-D,\sum_d\vvmbDK_{dK})
+\end{array}
+\]
+The $\arg\max$ expression above, computing the mode of the $\mbeta$ distribution, can be simplified by introducing function $\boldsymbol{\Phi}$ defined for any vector $u_N$ by
+\begin{eqnarray*}
+\boldsymbol{\Phi}(u_N) & \triangleq & \arg\min_{x_N}\log\mathcal{B}(x_N)+u_Nx_N
+\end{eqnarray*}
+The resulting update rules~$\ruleref{D}$ and ~$\ruleref{d}$ are given in Figure~\ref{fig:ldaupdates-variant}. By constraining $\cpnt{\dot{q}}{K}$ to be Dirac, the computation of its expectation becomes trivial in update~$\ruleref{D}$, but at the price of its own update~$\ruleref{d}$, which now requires the computation of the mode of the approximated distribution. In other words, we have traded a complex integration for a complex optimisation, but the latter is still more tractable than the former.
+
+Let's now detail an alternative approach, on the topic-word side for the sake of presentation (but it works just as well on the document-topic side). We still choose $\cpnt{p}{W}$ in the $\mbeta$ class as before, but we don't force its parameter $(m,\pmW_W)$ to be $0$ as above. Hence, $\cpnt{\dot{q}}{W}$ is also in the same class, and let $(\dot{m},\vvmW_W)$ be its parameter. The updates are then completely straightforward to derive. The key observation here is that parameter $\dot{m}$ is assigned the expression $m-K$, which never changes in subsequent updates. Furthermore, if we choose $m=K$, that expression is null, i.e. $\dot{m}=0$. This is particularly helpful, because, then, the intractable $\mbeta(\dot{m},\vvmW_W)$ distribution becomes a simple Exponential distribution\footnote{We mean here a multivariate Exponential, product of independent scalar Exponentials.} with rate $\vvmW_W$, the expectation of which is trivial to compute.
+\[
+\begin{array}{rcl}
+\multicolumn{3}{c}{
+\cpnt{p}{W} = \mbeta(K,\pmW_W)
+\;\;
+\cpnt{\dot{q}}{W} = \textbf{Expon}(\vvmW_W)
+} \\
+\vvmKW_{kw} & \assignn & \vvmW_w^{-1}+\sum_dn_{dw}\vvmDWK_{dwk} \\
+\vvmW_w & \assignn & \pmW_w+\sum_k\vvmbKW_{kw}
+\end{array}
+\]
+The resulting update rules~$\ruleref{W}$ and  $\ruleref{w}$ are given in Figure~\ref{fig:ldaupdates-variant}. Note that parameter $\pmW_W$ is still free: it could be set to $0$, or preferably to some small machine value (the same for all components) to avoid numerical instability in the inversion of the rate in the expectation of the Exponential in rule~$\ruleref{W}$.
+
+In both variants of LDA, the priors are improper: in the EM type 2 estimation, because it is ``uniform'' on a space of infinite measure (the positive orthant), and in our case by Proposition~\ref{prop:mbeta-proper}, since $K$ is obviously not less than $1$. None of them is null anywhere on the positive orthant, so the support is preserved.
+
+Using an improper prior is not a problem so long as the posterior is guaranteed to remain proper. While we cannot check that on the true posterior, we can at least check that its approximation computed by the VB method is proper. $\cpnt{\dot{q}}{W}$ is an Exponential, and obviously proper: it is easy to show that its parameter $\cpnt{\vvmW}{W}$ always remain strictly within the positive orthant. As for $\cpnt{\dot{q}}{K}$, which is a Dirac, we should rather consider the distribution which it approximates, namely $\mbeta(-D,\sum_d\vvmbDK_{dK})$, and show that the latter is proper. By Proposition~\ref{prop:mbeta-proper}, and after a few transformations (essentially replacing $\vvmbDK_{DK}$ by its definition in terms of $\vvmDK_{DK}$) we have to show
+\[
+\log\sum_k\exp\frac{1}{D}\sum_d\Psi(\vvmDK_{dk})<\frac{1}{D}\sum_{d}\Psi(\sum_k\vvmDK_{dk})
+\]
+And indeed, this is a direct consequence of the convexity of $\log\sum\exp$, together with some known property of function $\Psi$.
+
+The prior $\cpnt{p}{W}$ on $\vmW_W$ is very different in shape from $\cpnt{p}{K}$ on $\vmK_K$. While the latter has a uniform (improper) density, the former is strongly peaked at $0$ and sharply decreasing away from it. It tends to favour values of $\vmW_W$ close to $0$. But $\vmW_W$ is the parameter of the Dirichlet for $\vmKW_{kW}$, and a Dirichlet with parameter close to 0 tends to favour values towards the borders, and even more the corners, of the simplex. Since $\vmKW_{kW}$ is the distribution of words of topic $k$, being close to the borders and corners of the simplex essentially means being sparse. Hence, our choice of prior favours sparsity in the topic word profiles (the same applies to the document topic profile if we choose our prior on that side).

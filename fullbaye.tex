@@ -28,8 +28,8 @@
 \newcommand{\carac}[1]{\mathbb{I}[{#1}]}
 \newcommand{\mbeta}{\mathbf{Boojum}}
 \newcommand{\cpnt}[2]{{#1}^{(\!{#2}\!)}}
-\newcommand{\assignn}{\longleftarrow}
-\newcommand{\assign}[1]{\underset{\textbf{[#1]}}{\longleftarrow}}
+\newcommand{\assignn}{\leftarrow}
+\newcommand{\assign}[1]{\underset{\textbf{[#1]}}{\leftarrow}}
 \newcommand{\ruleref}[1]{\textbf{[#1]}}
 
 \newtheorem{definition}{Definition}
@@ -84,8 +84,11 @@
 \section{Related work}
 \input{RelatedWork}
 \section{A conjugate prior for the Dirichlet distribution}
+\label{sec:huntingsnark}
 \input{HuntingSnark}
-\section{Fully variational Bayes for Latent Dirichlet Allocation}
+\section{Variational Bayes with Conjugate priors for LDA}
+\label{sec:ldawithcprior}
+\input{LDAWithCPrior}
 \section{Experiments}
 \section{Discussion}
 

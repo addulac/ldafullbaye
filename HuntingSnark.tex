@@ -40,7 +40,7 @@ This holds whenever the prior is proper, in which case so is the posterior.
 \begin{figure*}
 \begin{tabular}{c@{\hspace{1cm}}c}
 \begin{minipage}{6cm}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=.8]
 \node (d) at (0,0) [BNVarDiscrete,BNObserved] {$d_i$};
 \node (z) at (2,0) [BNVarDiscrete] {$z_i$};
 \node (w) at (4,0) [BNVarDiscrete,BNObserved] {$w_i$};
@@ -65,15 +65,15 @@ This holds whenever the prior is proper, in which case so is the posterior.
 $
 \begin{array}{l}
 \begin{array}{l}
-q(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_Iw_I|d_I) =\\
-\hspace{1cm}q(\vmK_K)q(\vmW_W)\\
-\hspace{1cm}\prod_{d\in D}q(\vmDK_{dK}|\vmK_K)\prod_{k\in K}q(\vmDK_{kW}|\vmW_W)\\
-\hspace{1cm}\prod_{i\in I}q(z_i|d_i\vmDK_{DK})q(w_i|z_i\vmKW_{KW})
+p(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_Iw_I|d_I) =\\
+\hspace{1cm}p(\vmK_K)p(\vmW_W)\\
+\hspace{1cm}\prod_{d\in D}p(\vmDK_{dK}|\vmK_K)\prod_{k\in K}p(\vmDK_{kW}|\vmW_W)\\
+\hspace{1cm}\prod_{i\in I}p(z_i|d_i\vmDK_{DK})p(w_i|z_i\vmKW_{KW})
 \end{array}
 \vspace{.3cm}
 \\
 \begin{array}{rcl@{\hspace{.5cm}}rcl}
-\vmK_K & \sim & \cpnt{q}{K} & \vmW_W & \sim & \cpnt{q}{W}
+\vmK_K & \sim & \cpnt{p}{K} & \vmW_W & \sim & \cpnt{p}{W}
 \end{array}
 \\
 \begin{array}{r@{\hspace{.5cm}}rcl}
@@ -87,24 +87,14 @@ $
 \end{tabular}
 \begin{eqnarray}
 \label{eqn:logprobtrue}
-\log q(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_I|w_Id_I) & = &
-\log\cpnt{q}{K}(\vmK_K)+\log\cpnt{q}{W}(\vmW_W)-D\log\mathcal{B}(\vmK_K)-K\log\mathcal{B}(\vmW_W)\\
+\log p(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_I|w_Id_I) & = &
+\log\cpnt{p}{K}(\vmK_K)+\log\cpnt{p}{W}(\vmW_W)-D\log\mathcal{B}(\vmK_K)-K\log\mathcal{B}(\vmW_W)\\
 \nonumber & + & \sum_{dk}(\vmK_k{-}1)\log\vmDK_{dk}+\sum_{kw}(\vmW_w{-}1)\log\vmKW_{kw}+\sum_{ik}\carac{z_i=k}(\log\vmDK_{d_ik}{+}\log\vmKW_{kw_i})
 \end{eqnarray}
 \caption{\label{fig:fullbn}The full Bayesian network of the LDA model and the decomposition of its joint distribution $q$.}
 \end{figure*}
-Given a number $D$ of documents, $W$ of words (or terms), $K$ of topics and $I$ of occurrences, a realisation consists of the following random variables\footnote{In the sequel, we take the convention of not distinguishing the vectors by typesetting them in boldface, but rather by systematically recalling their index ranges as subscripts.}:
-\begin{itemize}
-\item
-a tuple $(d_i,z_i,w_i)_{i\in I}$, where for each $i\in I$, the discrete objects $d_i\in D,z_i\in K,w_i\in W$ denote, respectively, the document, the topic and the word associated with occurrence $i$;
-\item
-two stochastic matrices $\vmDK_{DK}$ (of dimension $D\times K$) and $\vmKW_{KW}$ (of dimension $K\times W$) which characterise each document $d$ as the distribution of topics $\vmDK_{dK}$ and each topic $k$ as the distribution of words $\vmKW_{kW}$;
-\item
-two positive vectors $\vmK_K$ and $\vmW_W$ which characterise the topics and words of the whole collection.
-\end{itemize}
-The space of realisations is that of complete collections of documents: this explains why the collection-level variables $\vmK_K$ and $\vmW_W$ are random, and not parameters. Besides the known size parameters $D,W,K,I$, the model has two possibly unknown parameters $\cpnt{q}{K}$ and $\cpnt{q}{W}$, which are distributions for $\vmK_K$ and $\vmW_W$, respectively. For the sake of symmetry, the occurrence-document vector $d_I$ is considered a random variable, but it is assumed always observed and independent of all the rest, so it could as well have been treated as a known parameter. All probability expressions are conditioned upon it. The full graphical representation of the LDA model is given in Figure~\ref{fig:fullbn}. Conditioned to the observation of the occurrence-word vector $w_I$, the log probability is given, up to some additive constant depending only on $d_I,w_I$, by
+Given a number $D$ of documents, $W$ of words (or terms), $K$ of topics and $I$ of occurrences, a realisation consists of the following random variables\footnote{In the sequel, we take the convention of not distinguishing the vectors by typesetting them in boldface, but rather by systematically recalling their index ranges as subscripts.}: $(i)$ a tuple $(d_i,z_i,w_i)_{i\in I}$, where for each $i\in I$, the discrete objects $d_i\in D,z_i\in K,w_i\in W$ denote, respectively, the document, the topic and the word associated with occurrence $i$; $(ii)$ two stochastic matrices $\vmDK_{DK}$ (of dimension $D\times K$) and $\vmKW_{KW}$ (of dimension $K\times W$) which characterise each document $d$ as the distribution of topics $\vmDK_{dK}$ and each topic $k$ as the distribution of words $\vmKW_{kW}$; $(iii)$ two positive vectors $\vmK_K$ and $\vmW_W$ which characterise the topics and words of the whole collection.
 
+The space of realisations is that of complete collections of documents: this explains why the collection-level variables $\vmK_K$ and $\vmW_W$ are random, and not parameters. Besides the known size parameters $D,W,K,I$, the model has two possibly unknown parameters $\cpnt{p}{K}$ and $\cpnt{p}{W}$, which are distributions for $\vmK_K$ and $\vmW_W$, respectively. For the sake of symmetry, the occurrence-document vector $d_I$ is considered a random variable, but it is assumed always observed and independent of all the rest, so it could as well have been treated as a known parameter. All probability expressions are conditioned upon it. The full graphical representation of the LDA model is given in Figure~\ref{fig:fullbn}. Conditioned to the observation of the occurrence-word vector $w_I$, the log probability is given, up to some additive constant depending only on $d_I,w_I$, by~(\ref{eqn:logprobtrue}).
 
-
-
-Note that, at this point, we make no assumption on the distributions $\cpnt{q}{K}$ and $\cpnt{q}{W}$. Our main contribution is precisely in studying the impact of the choice of these distributions. We show that an appropriate choice leads to a new formulation of the variational approximation of LDA, which we investigate.
+Note that, at this point, we make no assumption on the distributions $\cpnt{p}{K}$ and $\cpnt{p}{W}$. Our main contribution is precisely in studying the impact of the choice of these distributions. We show that an appropriate choice leads to a new formulation of the variational approximation of LDA, which we investigate.
