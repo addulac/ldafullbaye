@@ -1,0 +1,61 @@
+\begin{figure*}
+\begin{tabular}{c@{\hspace{1cm}}c}
+\begin{minipage}{6cm}
+\begin{tikzpicture}[scale=.8]
+\node (d) at (0,0) [BNVarDiscrete,BNObserved] {$d_i$};
+\node (z) at (2,0) [BNVarDiscrete] {$z_i$};
+\node (w) at (4,0) [BNVarDiscrete,BNObserved] {$w_i$};
+\node (theta) at (2,2) [BNVar] {$\vmDK_{dK}$};
+\node (phi) at (4,2) [BNVar] {$\vmKW_{kW}$};
+\node (alpha) at (2,4) [BNVar] {$\vmK_K$};
+\node (beta) at (4,4) [BNVar] {$\vmW_W$};
+\draw [->] (d) -- (z);
+\draw [->] (z) -- (w);
+\draw [->] (alpha) -- (theta);
+\draw [->] (theta) -- (z);
+\draw [->] (beta) -- (phi);
+\draw [->] (phi) -- (w);
+\draw (-1,-1) rectangle (5,1);
+\draw (-1,-1) node[above right] {$i\in I$};
+\draw (.9,1.1) rectangle (2.7,2.9);
+\draw (.9,1.1) node[above right] {$d\in D$};
+\draw (2.9,1.1) rectangle (4.7,2.9);
+\draw (2.9,1.1) node[above right] {$k\in K$};
+\end{tikzpicture}
+\end{minipage} &
+$
+\begin{array}{l}
+\begin{array}{l}
+p(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_Iw_I|d_I) =\\
+\hspace{1cm}p(\vmK_K)p(\vmW_W)\\
+\hspace{1cm}\prod_{d\in D}p(\vmDK_{dK}|\vmK_K)\prod_{k\in K}p(\vmDK_{kW}|\vmW_W)\\
+\hspace{1cm}\prod_{i\in I}p(z_i|d_i\vmDK_{DK})p(w_i|z_i\vmKW_{KW})
+\end{array}
+\vspace{.3cm}
+\\
+\begin{array}{rcl@{\hspace{.5cm}}rcl}
+\vmK_K & \sim & \cpnt{p}{K} & \vmW_W & \sim & \cpnt{p}{W}
+\end{array}
+\\
+\begin{array}{r@{\hspace{.5cm}}rcl}
+\forall d\in D & \vmDK_{dK}|\vmK_K & \sim & \mathbf{Dirichlet}(\vmK_K)\\
+\forall k\in K & \vmKW_{kW}|\vmW_W & \sim & \mathbf{Dirichlet}(\vmW_W)\\
+\forall i\in I & z_i|d_i\vmDK_{DK} & \sim & \mathbf{Cat}(\vmDK_{d_iK})\\
+\forall i\in I & w_i|z_i\vmKW_{KW} & \sim & \mathbf{Cat}(\vmKW_{z_iW})
+\end{array}
+\end{array}
+$
+\end{tabular}
+\begin{eqnarray}
+\label{eqn:logprobtrue}
+\log p(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_I|w_Id_I) & = &
+\log\cpnt{p}{K}(\vmK_K)+\log\cpnt{p}{W}(\vmW_W)-D\log\mathcal{B}(\vmK_K)-K\log\mathcal{B}(\vmW_W)\\
+\nonumber & + & \sum_{dk}(\vmK_k{-}1)\log\vmDK_{dk}+\sum_{kw}(\vmW_w{-}1)\log\vmKW_{kw}+\sum_{ik}\carac{z_i=k}(\log\vmDK_{d_ik}{+}\log\vmKW_{kw_i})
+\end{eqnarray}
+\caption{\label{fig:fullbn}The full Bayesian network of the LDA model and the decomposition of its joint distribution $q$.}
+\end{figure*}
+Given a number $D$ of documents, $W$ of words (or terms), $K$ of topics and $I$ of occurrences, a realisation consists of the following random variables\footnote{In the sequel, we take the convention of not distinguishing the vectors by typesetting them in boldface, but rather by systematically recalling their index ranges as subscripts.}: $(i)$ a tuple $(d_i,z_i,w_i)_{i\in I}$, where for each $i\in I$, the discrete objects $d_i\in D,z_i\in K,w_i\in W$ denote, respectively, the document, the topic and the word associated with occurrence $i$; $(ii)$ two stochastic matrices $\vmDK_{DK}$ (of dimension $D\times K$) and $\vmKW_{KW}$ (of dimension $K\times W$) which characterise each document $d$ as the distribution of topics $\vmDK_{dK}$ and each topic $k$ as the distribution of words $\vmKW_{kW}$; $(iii)$ two positive vectors $\vmK_K$ and $\vmW_W$ which characterise the topics and words of the whole collection. The full graphical representation of the LDA model is given in Figure~\ref{fig:fullbn}.
+
+The space of realisations is that of complete collections of documents: this explains why the collection-level variables $\vmK_K$ and $\vmW_W$ are random, and not parameters. Besides the known size parameters $D,W,K,I$, the model has two possibly unknown parameters $\cpnt{p}{K}$ and $\cpnt{p}{W}$, which are distributions for $\vmK_K$ and $\vmW_W$, respectively. For the sake of symmetry, the occurrence-document vector $d_I$ is considered a random variable, but it is assumed always observed and independent of all the rest, so it could as well have been treated as a known parameter. All probability expressions are conditioned upon it. Conditioned to the observation of the occurrence-word vector $w_I$, the log probability is given, up to some additive constant depending only on $d_I,w_I$, by~(\ref{eqn:logprobtrue}).
+
+Note that, at this point, we make no assumption on the distributions $\cpnt{p}{K}$ and $\cpnt{p}{W}$. Our main contribution is precisely in studying the impact of the choice of these distributions. We show that an appropriate choice leads to a new formulation of the variational approximation of LDA, which we investigate.
