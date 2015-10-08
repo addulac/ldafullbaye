@@ -28,8 +28,8 @@
 \newcommand{\carac}[1]{\mathbb{I}[{#1}]}
 \newcommand{\mbeta}{\mathbf{Boojum}}
 \newcommand{\cpnt}[2]{{#1}^{(\!{#2}\!)}}
-\newcommand{\assignn}{\longleftarrow}
-\newcommand{\assign}[1]{\underset{\textbf{[#1]}}{\longleftarrow}}
+\newcommand{\assignn}{\leftarrow}
+\newcommand{\assign}[1]{\underset{\textbf{[#1]}}{\leftarrow}}
 \newcommand{\ruleref}[1]{\textbf{[#1]}}
 
 \newtheorem{definition}{Definition}
@@ -45,11 +45,6 @@
 % aistats2016 as follows:
 %
 %\usepackage[accepted]{aistats2016}
-%
-% This option will print headings for the title of your paper and
-% headings for the authors names, plus a copyright note at the end of
-% the first column of the first page.
-
 
 \begin{document}
 
@@ -69,36 +64,52 @@
 
 \twocolumn[
 
-\aistatstitle{A fully Bayesian view of Latent Dirichlet Allocation }
+\aistatstitle{On Latent Dirichlet Allocation Priors and Variational Bayes}
 
-\aistatsauthor{ Anonymous Author 1 \And Anonymous Author 2 \And Anonymous Author 3 }
+\aistatsauthor{ Jean-Marc Andreoli \And Adrien Dulac \And Eric Gaussier }
 
-\aistatsaddress{ Unknown Institution 1 \And Unknown Institution 2 \And Unknown Institution 3 } ]
+\aistatsaddress{ Xerox Research Centre Europe\\ Grenoble, France \And Universit{\'e} Grenoble Alpes\\ Laboratoire d'Informatique de Grenoble \And } ]
 
 \begin{abstract}
-    Abstract...
+Latent Dirichlet Allocation (LDA) is a successful model capable of explaining large document collections using a small number of topics. Several methods exist to estimate it, one of the earliest ones being Variational Bayes (VB). While the core of the model has been stable since its inception ca. 2003, its ``border'', namely the treatment of the hyper-parameters, has been widely debated, since its importance in practice has been acknowledged. We study here in a systematic way the impact of the choice of LDA model priors on the Variational Bayes algorithm, then propose a new ``natural'' prior obtained by simply applying the principle of Bayesian conjugacy which underlies the design of the rest of the model. This leads to new, efficient VB update rules, which we discuss and experiment on a few document collections.
 \end{abstract}
 
-
-\section{Introduction}
-\section{Related work}
+\section{INTRODUCTION}
+One of the earliest applications of the Variational Bayes method in machine learning was in the domain of topic modelling, with the LDA model, where potentially large document collections are summarised by a small set of topics, each document being seen as a sparse mixture of topics and each topic as a sparse mixture of words. Part of the success of the method originates in the simplicity of its algorithm, which relies on a small set of well founded update rules. While the rules associated to the core of the LDA model are stable and consensual, those dealing with the ``border'' of the model have often been debated, and no clear consensus has emerged. In the Bayesian network terminology, the problem is that of the choice of priors, the importance of which has often been acknowledged. We propose here a systematic study of this problem, as well as yet another variant of LDA obtained by simple application of its underlying design principle, which can be informally summarised as: in the absence of better criterion, try conjugate priors.
+\section{RELATED WORK}
 \input{RelatedWork}
-\section{A conjugate prior for the Dirichlet distribution}
+\section{A CONJUGATE PRIOR FOR THE DIRICHLET DISTRIBUTION}
+\label{sec:huntingsnark}
 \input{HuntingSnark}
+<<<<<<< HEAD
 \section{Fully variational Bayes for Latent Dirichlet Allocation}
 \section{Experiments}
 \input{experiments}
 \section{Discussion}
 
 \subsubsection*{Acknowledgements}
+=======
+\section{LDA REVISITED}
+\label{sec:ldarevisited}
+\input{LDARevisited}
+\section{PRIORS FOR VARIATIONAL BAYES LDA}
+\label{sec:ldawithcprior}
+\input{LDAWithCPrior}
+>>>>>>> 6a3e91743cf00597611218f48f0e4fe7dea84873
 
-Use unnumbered third level headings for the acknowledgements.  All
-acknowledgements go at the end of the paper.  Be sure to omit any
-identifying information in the initial double-blind submission!
 
+\section{Experiments}
+\section{Discussion}
 
-\subsubsection*{References}
+% \subsubsection*{Acknowledgements}
 
-Asuncion, Arthur, et al. "On smoothing and inference for topic models." Proceedings of the Twenty-Fifth Conference on Uncertainty in Artificial Intelligence. AUAI Press, 2009.
+% Use unnumbered third level headings for the acknowledgements.  All
+% acknowledgements go at the end of the paper.  Be sure to omit any
+% identifying information in the initial double-blind submission!
+
+\pagebreak % for submission only, remove in final version (JMA)
+
+\bibliographystyle{abbrv}
+\bibliography{a.bib}
 
 \end{document}

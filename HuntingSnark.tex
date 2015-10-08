@@ -1,7 +1,7 @@
 It is well known that the exponential family of distributions satisfies important stability properties, which lead to elegant, analytical expressions in Bayesian inference, hence its massive use in Bayesian models. One property is that any distribution in that family has a natural conjugate also in that family, and there is a systematic procedure to compute it. For example, the Dirichlet distribution can be derived in this way as a conjugate to the multinomial distribution, and they are both in the exponential family. In the sequel, we are interested in a conjugate to the Dirichlet itself, which is easy to derive by application of the same systematic procedure. We name it here the $\mbeta$ distribution\footnote{a.k.a. the Snark distribution, because the Snark is a Boojum, you see.}, for lack of a better name. It is a distribution over the positive orthant $\mathbb{R}_+^N$ (the parameter space of the $N$-dimensional Dirichlet), and has two parameters $m,\boldsymbol{\tau}$ where $m\in\mathbb{R}$ is a scalar and $\boldsymbol{\tau}\in\mathbb{R}^N$ is a vector (as a general rule, the parameter space of the conjugate has dimension one plus the dimension of the parameter space of the original distribution). It is defined, for $\boldsymbol{x}\in\mathbb{R}_+^N$ by
-\begin{eqnarray}
+\begin{eqnarray*}
 \mbeta(\boldsymbol{x};m,\boldsymbol{\tau}) & \triangleq & \frac{1}{Z(m,\boldsymbol{\tau})}\mathcal{B}(\boldsymbol{x})^m\exp-\boldsymbol{\tau}\boldsymbol{x}
-\end{eqnarray}
+\end{eqnarray*}
 where $\mathcal{B}$ denotes the multivariate beta function $\mathcal{B}(\boldsymbol{x})\triangleq\frac{\prod_n\Gamma(x_n)}{\Gamma(\sum_nx_n)}$ which is also the normalising constant of the Dirichlet distribution with parameter $\boldsymbol{x}$, and $Z(m,\boldsymbol{\tau})$ is the normalising constant of the $\mbeta$ distribution itself, defined by
 \begin{eqnarray*}
 Z(m,\boldsymbol{\tau}) & \triangleq & \int_{\boldsymbol{x}\in\mathbb{R}_+^N}\mathcal{B}(\boldsymbol{x})^m\exp-\boldsymbol{\tau} \boldsymbol{x}\;\dd{\boldsymbol{x}}
@@ -17,9 +17,9 @@ The distribution $\mbeta(m,\boldsymbol{\tau})$ is proper, i.e. $Z(m,\boldsymbol{
 \end{array}
 \]
 \end{proposition}
-Now, conjugacy with the Dirichlet distribution is expressed by the following property.
+The proof of this result is not trivial, and is available on demand from the authors. On the other hand, conjugacy with the Dirichlet distribution, as expressed by the following property, is quite straightforward.
 \begin{proposition}
-Let $(\boldsymbol{y}_p)_{p\in P}$ be a family of random variables over the simplex of $\mathbb{R}_+^N$, which are mutually independent given a random variable $\boldsymbol{x}$ over $\mathbb{R}_+^N$. We have
+Let $(\boldsymbol{y}_p)_{p\in P}$ be a family of random variables over the simplex of $\mathbb{R}_+^N$, assumed mutually independent given a random variable $\boldsymbol{x}$ over $\mathbb{R}_+^N$.
 \[
 \begin{array}{l}
 \begin{array}{ll}
@@ -29,82 +29,8 @@ Let $(\boldsymbol{y}_p)_{p\in P}$ be a family of random variables over the simpl
 \textrm{Posterior:} &
 \boldsymbol{x}|(\boldsymbol{y}_p)_{p\in P} \sim \mbeta(m',\boldsymbol{\tau}')
 \end{array}\\
-\textrm{where } m'=m-|P|\;\;\boldsymbol{\tau}'=\boldsymbol{\tau}-\sum_{p\in P}\log\boldsymbol{y}_p
+\textrm{where } m'=m-|P|\textrm{ and }\boldsymbol{\tau}'=\boldsymbol{\tau}-\sum_{p\in P}\log\boldsymbol{y}_p
 \end{array}
 \]
 This holds whenever the prior is proper, in which case so is the posterior.
 \end{proposition}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The LDA model revisited}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{tabular}{c@{\hspace{1cm}}c}
-\begin{minipage}{6cm}
-\begin{tikzpicture}
-\node (d) at (0,0) [BNVarDiscrete,BNObserved] {$d_i$};
-\node (z) at (2,0) [BNVarDiscrete] {$z_i$};
-\node (w) at (4,0) [BNVarDiscrete,BNObserved] {$w_i$};
-\node (theta) at (2,2) [BNVar] {$\vmDK_{dK}$};
-\node (phi) at (4,2) [BNVar] {$\vmKW_{kW}$};
-\node (alpha) at (2,4) [BNVar] {$\vmK_K$};
-\node (beta) at (4,4) [BNVar] {$\vmW_W$};
-\draw [->] (d) -- (z);
-\draw [->] (z) -- (w);
-\draw [->] (alpha) -- (theta);
-\draw [->] (theta) -- (z);
-\draw [->] (beta) -- (phi);
-\draw [->] (phi) -- (w);
-\draw (-1,-1) rectangle (5,1);
-\draw (-1,-1) node[above right] {$i\in I$};
-\draw (.9,1.1) rectangle (2.7,2.9);
-\draw (.9,1.1) node[above right] {$d\in D$};
-\draw (2.9,1.1) rectangle (4.7,2.9);
-\draw (2.9,1.1) node[above right] {$k\in K$};
-\end{tikzpicture}
-\end{minipage} &
-$
-\begin{array}{l}
-\begin{array}{l}
-q(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_Iw_I|d_I) =\\
-\hspace{1cm}q(\vmK_K)q(\vmW_W)\\
-\hspace{1cm}\prod_{d\in D}q(\vmDK_{dK}|\vmK_K)\prod_{k\in K}q(\vmDK_{kW}|\vmW_W)\\
-\hspace{1cm}\prod_{i\in I}q(z_i|d_i\vmDK_{DK})q(w_i|z_i\vmKW_{KW})
-\end{array}
-\vspace{.3cm}
-\\
-\begin{array}{rcl@{\hspace{.5cm}}rcl}
-\vmK_K & \sim & \cpnt{q}{K} & \vmW_W & \sim & \cpnt{q}{W}
-\end{array}
-\\
-\begin{array}{r@{\hspace{.5cm}}rcl}
-\forall d\in D & \vmDK_{dK}|\vmK_K & \sim & \mathbf{Dirichlet}(\vmK_K)\\
-\forall k\in K & \vmKW_{kW}|\vmW_W & \sim & \mathbf{Dirichlet}(\vmW_W)\\
-\forall i\in I & z_i|d_i\vmDK_{DK} & \sim & \mathbf{Cat}(\vmDK_{d_iK})\\
-\forall i\in I & w_i|z_i\vmKW_{KW} & \sim & \mathbf{Cat}(\vmKW_{z_iW})
-\end{array}
-\end{array}
-$
-\end{tabular}
-\begin{eqnarray}
-\label{eqn:logprobtrue}
-\log q(\vmK_K\vmW_W\vmDK_{DK}\vmKW_{KW}z_I|w_Id_I) & = &
-\log\cpnt{q}{K}(\vmK_K)+\log\cpnt{q}{W}(\vmW_W)-D\log\mathcal{B}(\vmK_K)-K\log\mathcal{B}(\vmW_W)\\
-\nonumber & + & \sum_{dk}(\vmK_k{-}1)\log\vmDK_{dk}+\sum_{kw}(\vmW_w{-}1)\log\vmKW_{kw}+\sum_{ik}\carac{z_i=k}(\log\vmDK_{d_ik}{+}\log\vmKW_{kw_i})
-\end{eqnarray}
-\caption{\label{fig:fullbn}The full Bayesian network of the LDA model and the decomposition of its joint distribution $q$.}
-\end{figure*}
-Given a number $D$ of documents, $W$ of words (or terms), $K$ of topics and $I$ of occurrences, a realisation consists of the following random variables\footnote{In the sequel, we take the convention of not distinguishing the vectors by typesetting them in boldface, but rather by systematically recalling their index ranges as subscripts.}:
-\begin{itemize}
-\item
-a tuple $(d_i,z_i,w_i)_{i\in I}$, where for each $i\in I$, the discrete objects $d_i\in D,z_i\in K,w_i\in W$ denote, respectively, the document, the topic and the word associated with occurrence $i$;
-\item
-two stochastic matrices $\vmDK_{DK}$ (of dimension $D\times K$) and $\vmKW_{KW}$ (of dimension $K\times W$) which characterise each document $d$ as the distribution of topics $\vmDK_{dK}$ and each topic $k$ as the distribution of words $\vmKW_{kW}$;
-\item
-two positive vectors $\vmK_K$ and $\vmW_W$ which characterise the topics and words of the whole collection.
-\end{itemize}
-The space of realisations is that of complete collections of documents: this explains why the collection-level variables $\vmK_K$ and $\vmW_W$ are random, and not parameters. Besides the known size parameters $D,W,K,I$, the model has two possibly unknown parameters $\cpnt{q}{K}$ and $\cpnt{q}{W}$, which are distributions for $\vmK_K$ and $\vmW_W$, respectively. For the sake of symmetry, the occurrence-document vector $d_I$ is considered a random variable, but it is assumed always observed and independent of all the rest, so it could as well have been treated as a known parameter. All probability expressions are conditioned upon it. The full graphical representation of the LDA model is given in Figure~\ref{fig:fullbn}. Conditioned to the observation of the occurrence-word vector $w_I$, the log probability is given, up to some additive constant depending only on $d_I,w_I$, by
-
-
-
-
-Note that, at this point, we make no assumption on the distributions $\cpnt{q}{K}$ and $\cpnt{q}{W}$. Our main contribution is precisely in studying the impact of the choice of these distributions. We show that an appropriate choice leads to a new formulation of the variational approximation of LDA, which we investigate.
