@@ -29,14 +29,14 @@ where the expectation is taken over the set $\neg X$ of all the independent vari
 \end{eqnarray}
 The right-hand side of~(\ref{eqn:vbcore-Dirac}) is the mode of the right-hand side distribution in~(\ref{eqn:vbcore}), since the closest Dirac approximation of any distribution is the Dirac at its mode.
 
-In the case of the LDA model, it is well known that the choice of conjugate priors (for variable $\vmDK_{DK}$ and $\vmKW_{KW}$) lead to update rules~(\ref{eqn:vbcore}) which {\em naturally} constrain the variational distributions to the following forms\footnote{To avoid the multiplication of Greek letters, we denote the variational parameters with the same letter as the corresponding model variables, decorated with a dot.}:
+In the case of the LDA model, it is well known that the choice of conjugate (Dirichlet) priors for variables $\vmDK_{DK}$ and $\vmKW_{KW}$ lead to update rules~(\ref{eqn:vbcore}) which {\em naturally} constrain the variational distributions to the following forms\footnote{To avoid an inflation in Greek letters, we denote the variational parameters with the same letter as the corresponding model variables, decorated with a dot.}:
 \[
 \begin{array}{l@{\hspace{.3cm}}l}
 \forall d\in D& \dot{q}_d(\vmDK_K) = \mathbf{Dirichlet}(\vmDK_K;\vvmDK_{dK}) \\
 \forall k\in K& \dot{q}_k(\vmKW_W) = \mathbf{Dirichlet}(\vmKW_W;\vvmKW_{kW})
 \end{array}
 \]
-Furthermore, $\dot{q}_i$ is by construction a categorical distribution, with some parameter $\vvmDWK_{iK}$. However, the resulting updates do not differentiate between the distributions $\dot{q}_i$ where $d_i,w_i$ are identical, i.e. multiple occurrences of the same word in the same document. Hence, the variational parameter $\vvmDWK_{IK}$ can be replaced by a parameter $\vvmDWK_{DWK}$ such that $\vvmDWK_{iK}=\vvmDWK_{d_iw_iK}$ for all $i\in I$. Likewise, the observation $d_I,w_I$ can be summarised by the sufficient statistics $n_{DW}$, which is the document-word count matrix:
+Furthermore, $\dot{q}_i$ for $i\in I$ is by construction a categorical distribution, with some parameter $\vvmDWK_{iK}$. However, the resulting updates do not differentiate between the distributions $\dot{q}_i$ where $d_i,w_i$ are identical, i.e. multiple occurrences of the same word in the same document. Hence, the variational parameter $\vvmDWK_{IK}$ can be replaced by a parameter $\vvmDWK_{DWK}$ such that $\vvmDWK_{iK}=\vvmDWK_{d_iw_iK}$ for all $i\in I$. Likewise, the observation $d_I,w_I$ can be summarised by the sufficient statistics $n_{DW}$, which is the document-word count matrix:
 \begin{eqnarray*}
 n_{dw} & \triangleq & |\{i\in I|d_i=d,w_i=w\}|
 \end{eqnarray*}
@@ -79,10 +79,10 @@ which have a simple analytical expression. One recognises in Figure~\ref{fig:lda
 \hline
 \end{array}
 \]
-\caption{\label{fig:ldaupdates-variant}Updates $\ruleref{D},\ruleref{W},\ruleref{d},\ruleref{w}$ in our variants: one is equivalent to the EM type 2 estimation method and the other is original; for the sake of presentation, we apply the former to the document-topic side and the latter to the topic-word side, but they are interchangeable, or the same variant could be applied to both sides.}
+\caption{\label{fig:ldaupdates-variant}Updates $\ruleref{D},\ruleref{W},\ruleref{d},\ruleref{w}$ in our variants: one is equivalent to the EM type 2 estimation method and the other is original. For the sake of presentation, we apply the former to the document-topic side and the latter to the topic-word side, but they are interchangeable, or the same variant could be applied to both sides.}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Treatment of the parameters $\cpnt{q}{K}$ and $\cpnt{q}{W}$}
+\subsection{Treatment of the parameters $\cpnt{p}{K}$ and $\cpnt{p}{W}$}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Let's first justify the update~$\ruleref{d}$ of $\cpnt{\dot{q}}{K}$ (the same applies to update~$\ruleref{w}$ of $\cpnt{\dot{q}}{W}$). By eliminating from~(\ref{eqn:logprobtrue}) all the terms which do not involve $\vmK_K$, hence contribute only a multiplicative constant, and taking expectations on the others, Equation~(\ref{eqn:vbcore}) becomes
 \begin{small}
@@ -118,7 +118,7 @@ The $\arg\max$ expression above, computing the mode of the $\mbeta$ distribution
 \end{eqnarray*}
 The resulting update rules~$\ruleref{D}$ and ~$\ruleref{d}$ are given in Figure~\ref{fig:ldaupdates-variant}. By constraining $\cpnt{\dot{q}}{K}$ to be Dirac, the computation of its expectation becomes trivial in update~$\ruleref{D}$, but at the price of its own update~$\ruleref{d}$, which now requires the computation of the mode of the approximated distribution. In other words, we have traded a complex integration for a complex optimisation, but the latter is still more tractable than the former.
 
-Let's now detail an alternative approach, on the topic-word side for the sake of presentation (but it works just as well on the document-topic side). We still choose $\cpnt{p}{W}$ in the $\mbeta$ class as before, but we don't force its parameter $(m,\pmW_W)$ to be $0$ as above. Hence, $\cpnt{\dot{q}}{W}$ is also in the same class, and let $(\dot{m},\vvmW_W)$ be its parameter. The updates are then completely straightforward to derive. The key observation here is that parameter $\dot{m}$ is assigned the expression $m-K$, which never changes in subsequent updates. Furthermore, if we choose $m=K$, that expression is null, i.e. $\dot{m}=0$. This is particularly helpful, because, then, the intractable $\mbeta(\dot{m},\vvmW_W)$ distribution becomes a simple Exponential distribution\footnote{We mean here a multivariate Exponential, product of independent scalar Exponentials.} with rate $\vvmW_W$, the expectation of which is trivial to compute.
+Let's now detail an alternative approach, on the topic-word side for the sake of presentation (but it works just as well on the document-topic side). We still choose $\cpnt{p}{W}$ in the $\mbeta$ class as before, but we don't force its parameter $(m,\pmW_W)$ to be $0$ as above. Hence, $\cpnt{\dot{q}}{W}$ is also in the same class, and let $(\dot{m},\vvmW_W)$ be its parameter. The updates are then straightforward to derive. The key observation here is that parameter $\dot{m}$ is assigned the expression $m-K$, which never changes in subsequent updates. Furthermore, if we choose $m=K$, that expression is null, i.e. $\dot{m}=0$. This is particularly helpful, because, then, the intractable $\mbeta(\dot{m},\vvmW_W)$ distribution becomes a simple Exponential distribution\footnote{We mean here a multivariate Exponential, product of independent scalar Exponentials.} with rate $\vvmW_W$, the expectation of which is trivial to compute.
 \[
 \begin{array}{rcl}
 \multicolumn{3}{c}{
@@ -130,9 +130,9 @@ Let's now detail an alternative approach, on the topic-word side for the sake of
 \vvmW_w & \assignn & \pmW_w+\sum_k\vvmbKW_{kw}
 \end{array}
 \]
-The resulting update rules~$\ruleref{W}$ and  $\ruleref{w}$ are given in Figure~\ref{fig:ldaupdates-variant}. Note that parameter $\pmW_W$ is still free: it could be set to $0$, or preferably to some small machine value (the same for all components) to avoid numerical instability in the inversion of the rate in the expectation of the Exponential in rule~$\ruleref{W}$.
+The resulting update rules~$\ruleref{W}$ and  $\ruleref{w}$ are given in Figure~\ref{fig:ldaupdates-variant}. Note that parameter $\pmW_W$ is still free: it could be set to $0$, or preferably to some small machine value (the same for all components) to avoid numerical instability in the inversion of the rate defining the expectation of the Exponential in rule~$\ruleref{W}$.
 
-In both variants of LDA, the priors are improper: in the EM type 2 estimation, because it is ``uniform'' on a space of infinite measure (the positive orthant), and in our case by Proposition~\ref{prop:mbeta-proper}, since $K$ is obviously not less than $1$. None of them is null anywhere on the positive orthant, so the support is preserved.
+In both variants of LDA, the priors are improper: in the EM type 2 estimation, because it is ``uniform'' on a space of infinite measure (the positive orthant), and in our case by Proposition~\ref{prop:mbeta-proper}, since $K$ is obviously not less than $1$.
 
 Using an improper prior is not a problem so long as the posterior is guaranteed to remain proper. While we cannot check that on the true posterior, we can at least check that its approximation computed by the VB method is proper. $\cpnt{\dot{q}}{W}$ is an Exponential, and obviously proper: it is easy to show that its parameter $\cpnt{\vvmW}{W}$ always remain strictly within the positive orthant. As for $\cpnt{\dot{q}}{K}$, which is a Dirac, we should rather consider the distribution which it approximates, namely $\mbeta(-D,\sum_d\vvmbDK_{dK})$, and show that the latter is proper. By Proposition~\ref{prop:mbeta-proper}, and after a few transformations (essentially replacing $\vvmbDK_{DK}$ by its definition in terms of $\vvmDK_{DK}$) we have to show
 \[
@@ -141,3 +141,5 @@ Using an improper prior is not a problem so long as the posterior is guaranteed 
 And indeed, this is a direct consequence of the convexity of $\log\sum\exp$, together with some known property of function $\Psi$.
 
 The prior $\cpnt{p}{W}$ on $\vmW_W$ is very different in shape from $\cpnt{p}{K}$ on $\vmK_K$. While the latter has a uniform (improper) density, the former is strongly peaked at $0$ and sharply decreasing away from it. It tends to favour values of $\vmW_W$ close to $0$. But $\vmW_W$ is the parameter of the Dirichlet for $\vmKW_{kW}$, and a Dirichlet with parameter close to 0 tends to favour values towards the borders, and even more the corners, of the simplex. Since $\vmKW_{kW}$ is the distribution of words of topic $k$, being close to the borders and corners of the simplex essentially means being sparse. Hence, our choice of prior favours sparsity in the topic word profiles (the same applies to the document topic profile if we choose our prior on that side).
+
+The document topic side and the topic word side of the LDA model are strictly symmetric, just as dimensions are treated identically in a matrix factorisation. However, when considering the asymptotic behaviour of the model, that symmetry is broken, as the vocabulary is often seen as fixed, while the number of documents can grow to infinity. In that case, our variant could not be applied to the document topic side of the model, since it would make its prior dependent on the size $D$ of the document collection, and it would not asymptotically vanish as is usually expected. On the other hand, the topic word side is not affected.

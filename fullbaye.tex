@@ -45,11 +45,6 @@
 % aistats2016 as follows:
 %
 %\usepackage[accepted]{aistats2016}
-%
-% This option will print headings for the title of your paper and
-% headings for the authors names, plus a copyright note at the end of
-% the first column of the first page.
-
 
 \begin{document}
 
@@ -69,26 +64,30 @@
 
 \twocolumn[
 
-\aistatstitle{A fully Bayesian view of Latent Dirichlet Allocation }
+\aistatstitle{On Priors in Latent Dirichlet Allocation for Variational Bayes}
 
-\aistatsauthor{ Anonymous Author 1 \And Anonymous Author 2 \And Anonymous Author 3 }
+\aistatsauthor{ Jean-Marc Andreoli \And Adrien Dulac \And Eric Gaussier }
 
-\aistatsaddress{ Unknown Institution 1 \And Unknown Institution 2 \And Unknown Institution 3 } ]
+\aistatsaddress{ Xerox Research Centre Europe\\ Grenoble, France \And Universit{\'e} Grenoble Alpes\\ Laboratoire d'Informatique de Grenoble \And } ]
 
 \begin{abstract}
-    Abstract...
+Latent Dirichlet Allocation (LDA) is a successful model capable of explaining large document collections using a small number of topics. Several methods exist to estimate it, one of the earliest one being Variational Bayes. While the core of the model has been stable since its inception ca. 2003, its ``border'', namely the treatment of the hyper-parameters, has been widely debated, since its importance in practice has been acknowledged. We propose here a new variant of LDA, concerning the choice of its prior, simply applying the principle of Bayesian conjugacy which underlies the rest of its design. This leads to new, efficient update rules for the variational Bayes estimation algorithm and we explore that new design on a few experimental document collections.
 \end{abstract}
 
-
-\section{Introduction}
-\section{Related work}
+\section{INTRODUCTION}
+One of the earliest applications of the Variational Bayes method in machine learning was in the domain of topic modelling, with the LDA model, where potentially large document collections are summarised by a small set of topics, each document being seen as a sparse mixture of topics and each topic as a sparse mixture of words. Part of the success of the method originates in the simplicity of its algorithm, which relies on a small set of well founded update rules. While the rules associated to the core of the LDA model are stable and consensual, those dealing with the ``border'' of the model have often been debated, and no clear consensus has emerged. In the Bayesian network terminology, the problem is that of the choice of priors, the importance of which has often been acknowledged. We propose here a systematic study of this problem, as well as yet another variant of LDA obtained by systematic application of its underlying design principle, which can be informally summarised as: in the absence of better criterion, try conjugate priors.
+\section{RELATED WORK}
 \input{RelatedWork}
-\section{A conjugate prior for the Dirichlet distribution}
+\section{A CONJUGATE PRIOR FOR THE DIRICHLET DISTRIBUTION}
 \label{sec:huntingsnark}
 \input{HuntingSnark}
-\section{Variational Bayes with Conjugate priors for LDA}
+\section{LDA REVISITED}
+\label{sec:ldarevisited}
+\input{LDARevisited}
+\section{PRIORS FOR VARIATIONAL BAYES LDA}
 \label{sec:ldawithcprior}
 \input{LDAWithCPrior}
+<<<<<<< HEAD
 \section{Experiments}
 \section{Discussion}
 
@@ -100,5 +99,11 @@
 
 \bibliographystyle{abbrv}
 \bibliography{a.bib}
+=======
+\section{EXPERIMENTS}
+\section{DISCUSSION}
+
+\subsubsection*{References}
+>>>>>>> origin/master
 
 \end{document}
