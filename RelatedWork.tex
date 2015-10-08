@@ -1,5 +1,5 @@
 
 The LDA model \cite{blei_latent_2003} has been extended in many different ways to address different problems. Information about document authorship has, for example, been added to the model in \cite{Rosen_Zvi_2004}, whereas the integration of correlations between topics in the model has been explored in \cite{blei_correlated_2007}; more recently, \cite{Boyd_Graber_2009} describes an extension to model multilingual unaligned collections. Other extensions have focused on streaming or online versions of the model: \cite{Yao_2009} focuses on efficient methods for inference in streaming collections, whereas \cite{Wang_2012} introduces a new model for text streams based on transition probabilities between topics of successive documents and \cite{hoffman_online_2010} proposes an online variational Bayes algorithm for LDA based on mini-batches.
 
-
+Inference in LDA is usually performed through either variational Bayes (as proposed in the original LDA paper \cite{blei_latent_2003}) or Gibbs sampling approaches (as proposed in \cite{griffiths04finding}). Both methods have been extensively studied and collapsed versions, resulting in faster inferecen, have been proposed \cite{teh_collapsed_2006,porteous_fast_2008}.  
 
