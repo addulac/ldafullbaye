@@ -15,6 +15,15 @@ bib: dvi
 	${CC} ${SRC}.tex
 	${CONV} ${SRC}.dvi
 
+bib: dvi
+	bibtex ${SRC}
+	${CC} ${SRC}.tex
+	${CC} ${SRC}.tex
+	${CONV} ${SRC}.dvi
+
+pdf:
+	pdflatex ${SRC}.tex
+
 test:
 	${CC} ${TEST}.tex
 	${CONV} ${TEST}.dvi; 
