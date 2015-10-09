@@ -41,7 +41,7 @@ Furthermore, $\dot{q}_i$ for $i\in I$ is by construction a categorical distribut
 \begin{eqnarray*}
 n_{dw} & \triangleq & |\{i\in I|d_i=d,w_i=w\}|
 \end{eqnarray*}
-Finally, the updates given by~(\ref{eqn:vbcore}) applied to the LDA model are summarised in Figure~\ref{fig:ldaupdates}, where the different updates are given labels (in brackets under the arrow) for reference purpose. For clarity sake, we have introduced the intermediate variational quantities $\vvmbDK_{DK}$ and $\vvmbKW_{KW}$ defined by
+Finally, the updates given by~(\ref{eqn:vbcore}) applied to the LDA model are summarised in Figure~\ref{fig:ldaupdates}, where the different updates are labelled (in brackets under the arrow) for reference purpose. For clarity sake, we have introduced the intermediate variational quantities $\vvmbDK_{DK}$ and $\vvmbKW_{KW}$ defined by
 \[
 \vvmbDK_{dk}\triangleq\expectation_{\vmDK_K\sim\dot{q}_d}[-\log\vmDK_k]
 \hspace{.3cm}
@@ -90,8 +90,8 @@ Let's first justify the update~$\ruleref{d}$ of $\cpnt{\dot{q}}{K}$ (the same ap
 \begin{eqnarray*}
 \cpnt{\dot{q}}{K}(\vmK_K)
 & \assignn\propto &
-\exp\log\cpnt{p}{K}(\vmK_K)-D\log\mathcal{B}(\vmK_K)\\
-& + & \sum_d\expectation_{\vmDK_{dK}\sim\dot{q}_d}[\sum_k\vmK_k\log\vmDK_{dk}]\\
+\exp(\log\cpnt{p}{K}(\vmK_K)-D\log\mathcal{B}(\vmK_K)\\
+& & +\sum_d\expectation_{\vmDK_{dK}\sim\dot{q}_d}[\sum_k\vmK_k\log\vmDK_{dk}])\\
 & = &
 \cpnt{p}{K}(\vmK_K)\mathcal{B}(\vmK_K)^{-D}\exp\sum_{dk}-\vmK_k\vvmbDK_{dk}\\
 & \propto &
@@ -100,13 +100,13 @@ Let's first justify the update~$\ruleref{d}$ of $\cpnt{\dot{q}}{K}$ (the same ap
 \end{small}
 where $\mbeta$ is the conjugate distribution of the Dirichlet in the exponential family introduced in Section~\ref{sec:huntingsnark}. Note that this formula, involving the $\mbeta$ distribution, holds in general, whatever the choice of priors $\cpnt{p}{K},\cpnt{p}{W}$. To make the updates of $\cpnt{\dot{q}}{K},\cpnt{\dot{q}}{W}$ concrete, we now need to proceed with that choice. Since the two variables $\vmK_K$ and $\vmW_W$ are parameters of Dirichlet distributions, on $\vmDK_{DK}$ and $\vmKW_{KW}$ respectively, we naturally choose their modelling distributions $\cpnt{p}{K},\cpnt{p}{W}$ in the conjugate class of Dirichlet, namely $\mbeta$. This {\em naturally} ensures that the corresponding variational distributions $\cpnt{\dot{q}}{K},\cpnt{\dot{q}}{W}$ are also in that class.
 
-We first show that the so called EM type 2 hyper-parameter estimation, which has been proposed for VB LDA, is in fact a special case of this approach. Indeed, EM in general is known to be a special case of VB, and what we give here is just the pure VB presentation of the method, leading to the same updates. In VB, the method amounts to choosing an ``uninformative'' $\cpnt{p}{K}$, i.e. $\cpnt{p}{K}\propto1$, which is also the improper distribution $\mbeta(0,0)$. Reporting in~$\ruleref{d}$, this {\em naturally} constrains the distribution $\cpnt{\dot{q}}{K}$ to be equal to $\mbeta(-D,\sum_d\vvmbDK_{dK})$. However, update~$\ruleref{D}$ requires the computation of its expectation, which is intractable. Instead, $\cpnt{\dot{q}}{K}$ is {\em externally} constrained to be a Dirac distribution, hence we can apply Equation~(\ref{eqn:vbcore-Dirac}):
+We first show that the so called EM type 2 hyper-parameter estimation, which has been proposed for VB LDA in~\cite{blei_latent_2003}, is in fact a special case of this approach. Indeed, EM in general is known to be a special case of VB, and what we give here is just the pure VB presentation of the method, leading to the same updates. In VB, the method amounts to choosing an ``uninformative'' $\cpnt{p}{K}$, i.e. $\cpnt{p}{K}\propto1$, which is also the improper distribution $\mbeta(0,0)$. Reporting in~$\ruleref{d}$, this {\em naturally} constrains the distribution $\cpnt{\dot{q}}{K}$ to be equal to $\mbeta(-D,\sum_d\vvmbDK_{dK})$. However, update~$\ruleref{D}$ requires the computation of its expectation, which is intractable. Instead, $\cpnt{\dot{q}}{K}$ is {\em externally} constrained to be a Dirac distribution, hence we can apply Equation~(\ref{eqn:vbcore-Dirac}):
 \[
 \begin{array}{rcl}
 \multicolumn{3}{c}{
 \begin{array}{c@{\hspace{1cm}}c}
-\cpnt{p}{K}\propto1 &
-\cpnt{\dot{q}}{K} = \mathbf{Dirac}(\vvmK_K)
+\cpnt{p}{K}(\vmK)\propto1 &
+\cpnt{\dot{q}}{K}(\vmK) = \mathbf{Dirac}(\vmK;\vvmK_K)
 \end{array}
 }\\
 \vvmDK_{dk} & \assignn & \vvmK_k+\sum_wn_{dw}\vvmDWK_{dwk} \\
@@ -117,15 +117,15 @@ The $\arg\max$ expression above, computing the mode of the $\mbeta$ distribution
 \begin{eqnarray*}
 \boldsymbol{\Phi}(u_N) & \triangleq & \arg\min_{x_N}\log\mathcal{B}(x_N)+u_Nx_N
 \end{eqnarray*}
-The resulting update rules~$\ruleref{D}$ and ~$\ruleref{d}$ are given in Figure~\ref{fig:ldaupdates-variant}. By constraining $\cpnt{\dot{q}}{K}$ to be Dirac, the computation of its expectation becomes trivial in update~$\ruleref{D}$, but at the price of its own update~$\ruleref{d}$, which now requires the computation of the mode of the distribution thus approximated by the Dirac. In other words, we have traded a complex integration for a complex optimisation, but the latter is still more tractable than the former.
+An efficient Newton-Raphson algorithm is proposed in~\cite{blei_latent_2003} to compute it. The resulting update rules~$\ruleref{D}$ and ~$\ruleref{d}$ are given in Figure~\ref{fig:ldaupdates-variant}. By constraining $\cpnt{\dot{q}}{K}$ to be Dirac, the computation of its expectation becomes trivial in update~$\ruleref{D}$, but at the price of its own update~$\ruleref{d}$, which now requires the computation of the mode of the distribution thus approximated by the Dirac. In other words, we have traded a complex integration for a complex optimisation, but the latter is still more tractable than the former.
 
 Let's now detail an alternative approach, which we call here ``full conjugacy'', on the topic-word side for the sake of presentation (but it works just as well on the document-topic side). We still choose $\cpnt{p}{W}$ in the $\mbeta$ class as before, but we don't force its parameter $(m,\pmW_W)$ to be $0$ as above. Hence, $\cpnt{\dot{q}}{W}$ is also in the same class, and let $(\dot{m},\vvmW_W)$ be its parameter. The updates are then straightforward to derive. The key observation here is that parameter $\dot{m}$ is assigned the expression $m-K$, which never changes in subsequent updates. Furthermore, if we choose $m=K$, that expression is null, i.e. $\dot{m}=0$. This is particularly helpful, because, then, the intractable $\mbeta(\dot{m},\vvmW_W)$ distribution becomes a simple Exponential distribution\footnote{We mean here a multivariate Exponential, product of independent scalar Exponentials.} with rate $\vvmW_W$, the expectation of which is trivial to compute.
 \[
 \begin{array}{rcl}
 \multicolumn{3}{c}{
-\cpnt{p}{W} = \mbeta(K,\pmW_W)
+\cpnt{p}{W}(\vmW) = \mbeta(\vmW;K,\pmW_W)
 \;\;
-\cpnt{\dot{q}}{W} = \textbf{Expon}(\vvmW_W)
+\cpnt{\dot{q}}{W}(\vmW) = \textbf{Exp}(\vmW;\vvmW_W)
 } \\
 \vvmKW_{kw} & \assignn & \vvmW_w^{-1}+\sum_dn_{dw}\vvmDWK_{dwk} \\
 \vvmW_w & \assignn & \pmW_w+\sum_k\vvmbKW_{kw}
@@ -143,6 +143,10 @@ Using an improper prior is not a problem so long as the posterior is guaranteed 
 \]
 And indeed, this is a direct consequence of the convexity of $\log\sum\exp$, together with some known property of function $\Psi$.
 
-The prior of the full conjugacy method is very different in shape from that of the EM type 2 method. While the latter has a uniform (improper) density, the former is strongly peaked at $0$ and sharply decreasing away from it. It tends to favour values of $\vmW_W$ close to $0$. But $\vmW_W$ is the parameter of the Dirichlet for $\vmKW_{kW}$, and a Dirichlet with parameter close to 0 tends to favour values towards the borders, and even more the corners, of the simplex. This is indeed confirmed by looking at the shape of the (improper) prior distribution of the whole matrix $\vmKW_{KW}$, which can be computed analytically by collapsing $\vmW_W$. Since $\vmKW_{kW}$ is the distribution of words of topic $k$, being close to the borders and corners of the simplex essentially means being sparse. Hence, our choice of prior favours sparsity in the topic word profiles (the same applies to the document topic profiles if we apply full conjugacy on that side).
+The prior of the full conjugacy method is very different in shape from that of the EM type 2 method. While the latter has a uniform (improper) density, the former is strongly peaked at $0$ and sharply decreasing away from it. It tends to favour values of $\vmW_W$ close to $0$. But $\vmW_W$ is the parameter of the Dirichlet for $\vmKW_{kW}$, and a Dirichlet with parameter close to 0 tends to favour values towards the borders, and even more the corners, of the simplex. This is indeed confirmed by looking at the shape of the (improper) prior distribution of the whole matrix $\vmKW_{KW}$, which can be computed analytically by collapsing $\vmW_W$.
+\begin{eqnarray*}
+p(\vmKW_{KW}) & \propto & (\prod_{kw}\vmKW_{kw})^{-1}\left(\sum_w\pmW_w-\sum_k\log\vmKW_{kw}\right)^{-1}
+\end{eqnarray*}
+Since $\vmKW_{kW}$ is the distribution of words of topic $k$, being close to the borders and corners of the simplex essentially means being sparse. Hence, full conjugacy favours sparsity in the topic-word profiles (the same applies to the document-topic profiles if we apply it on that side).
 
-The document-topic side and the topic-word side of the LDA model are strictly symmetric, just as dimensions are treated symmetrically in a matrix factorisation. However, when considering the asymptotic behaviour of the model, that symmetry is broken, as the vocabulary is often seen as fixed, while the number of documents can grow to infinity. In that case, our full conjugacy variant could not be applied to the document topic side of the model, since it would make its prior $\cpnt{p}{K}=\mbeta(D,\pmK_K)$ dependent on the size $D$ of the document collection, and it would not asymptotically vanish as is usually expected. On the other hand, the topic word side is not affected, as the corresponding prior depends only on the number of topics $K$.
+The document-topic side and the topic-word side of the LDA model are strictly symmetric, just as dimensions are treated symmetrically in a matrix factorisation. However, when considering the asymptotic behaviour of the model, that symmetry is broken, as the vocabulary is often seen as fixed, while the number of documents can grow to infinity. In that case, our full conjugacy variant could not be applied to the document-topic side of the model, since it would make its prior $\cpnt{p}{K}=\mbeta(D,\pmK_K)$ dependent on the size $D$ of the document collection, and it would not asymptotically vanish as is usually expected. On the other hand, the topic-word side is not affected, as the corresponding prior depends only on the number of topics $K$.
