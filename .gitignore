@@ -11,3 +11,6 @@
 *.vrb
 *.synctex.gz
 *~
+*.pdf
+*.ps
+
