@@ -66,9 +66,10 @@
 
 \aistatstitle{On Latent Dirichlet Allocation Priors and Variational Bayes}
 
-\aistatsauthor{ Jean-Marc Andreoli \And Adrien Dulac \And Eric Gaussier }
+%\aistatsauthor{ Jean-Marc Andreoli \And Adrien Dulac \And Eric Gaussier }
 
-\aistatsaddress{ Xerox Research Centre Europe\\ Grenoble, France \And Universit{\'e} Grenoble Alpes\\ Laboratoire d'Informatique de Grenoble \And } ]
+%\aistatsaddress{ Xerox Research Centre Europe\\ Grenoble, France \And  University Grenoble Alps\\ Lab. d'Informatique de Grenoble \And University Grenoble Alps\\ Lab. d'Informatique de Grenoble}
+]
 
 \begin{abstract}
 Latent Dirichlet Allocation (LDA) is a successful model capable of explaining large document collections using a small number of topics. Several methods exist to estimate it, one of the earliest ones being Variational Bayes (VB). While the core of the model has been stable since its inception ca. 2003, its ``border'', namely the treatment of the hyper-parameters, has been widely debated, since its importance in practice has been acknowledged. We study here in a systematic way the impact of the choice of LDA model priors on the Variational Bayes algorithm, then propose a new ``natural'' prior obtained by simply applying the principle of Bayesian conjugacy which underlies the design of the rest of the model. This leads to new, efficient VB update rules, which we discuss and experiment on a few document collections.
@@ -87,9 +88,8 @@ One of the earliest applications of the Variational Bayes method in machine lear
 \section{PRIORS FOR VARIATIONAL BAYES LDA}
 \label{sec:ldawithcprior}
 \input{LDAWithCPrior}
-
-
 \section{Experiments}
+\input{experiments}
 \section{Discussion}
 
 % \subsubsection*{Acknowledgements}
