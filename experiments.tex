@@ -1,4 +1,4 @@
-In order to evaluate our proposal, we ran experiments over three standard corpora, namely: 20 News Groups\footnote{http://...}, NIPS 2012\footnote{http://...} and Reuters50\footnote{http://...}. Table~\ref{tab:stats} summarizes the characteristics of the these corpora. Each corpus is divided in a training and test set with a ratio 80-20 percent and models are evaluated according to their perplexity on the test set. We follow here the  approach of \cite{asuncion_smoothing_2009} based on the following fold-in procedure: the word-topic distribution is learned on the training set and considered fixed, whereas the document-topic distribution is learned for each document of the test set, by using the first half of the document only; the perplexity is then computed on each test document (and averaged over all test documents) using:
+In order to evaluate our proposal, we ran experiments over three standard corpora, namely: 20 News Groups\footnote{http://...}, NIPS 2012\footnote{http://...} and Reuters50\footnote{http://...}. Table~\ref{tab:stats} summarizes the characteristics of the these corpora. Each corpus is divided in a training and test set with a ratio 80-20 percent. Models are evaluated according to their perplexity on the test set and we follow here the  approach of \cite{asuncion_smoothing_2009} based on the following fold-in procedure: the word-topic distribution is learned on the training set and considered fixed, whereas the document-topic distribution is learned for each document of the test set, by using the first half of the document only; the perplexity is then computed on each test document, then averaged over all test documents, using:
 %
 \[
 \begin{array}{l@{\hspace{.3cm}}l}
@@ -7,25 +7,30 @@ perplexity(x^{test}) = \exp(- \frac{\log p(x^{test})}{\sum_d n_d})
 \end{array}
 \]
 %
-with $n_d = \sum_w n_{dw}$. 
-%$N_{dw}$ being the count of word in each document. This approximation of the perplexity , which is not directy computable, is approximed by a lower bound given by the Jensen inequality. ~\\
-In the given settings we experienced the Boojum on different combinations. We tried to infer the model with this conjugate prior for the 3-case possibility namely:
-\begin{itemize}
-\item on the topic-word distribution only with classical Newtows optimization for $\alpha$,
-\item on the document-topic distribution only,
-\item on both distributions. 
-\end{itemize}
-We found that using constant asymmetric prior on the document-topics distribution and a boojum for the topic-words one was more efficient in term of perplexity.
-% Discussion here for the contradiction with Wallach ?
+with $n_d = \sum_w n_{dw}$.
 
-We compared then the perplexity on several subset of training and testing and for various values of $K$, the number of topics. In figure \ref{fig:pp_D} we compute the ratio of perplexity to the two model. It shows a light tendancy of the model to be better for smaller corpora and to approach LDA performance when it increases. This is especially true for the 20 news group corpora, who maybe fit the assumptions behind the boojum in term of how his features are distributed. 
+We have compared several variants of the LDA model according to the previous development:
+%
+\begin{itemize}
+\item With a symmetric prior, fixed or estimated with the EM type 2 procedure, for $\alpha$ and/or $\beta$;
+\item With a fixed asymmetric prior, for $\alpha$ and/or $\beta$;
+\item With a Boojum prior, estimated with the procedure described in Section~\ref{sec:LDAwithPrior}, for $\alpha$ and/or $\beta$.
+\end{itemize}
+%
+The best combination is obtained with a fixed asymmetric prior on $\alpha$ and a Boojum on $\beta$. In the remainder, we refer to this model as {\it conjugate LDA} ({\it ldaconjugate} for short). Both the Boojum prior and the asymmetric prior on $\alpha$ yield better results than the symmetric one, in acordance with the results obtained in \cite{wallach_rethinking_2009} which illustrate the imporatnce of an asymmetric prior on the document-topic distribution. Furthermore, the Boojum prior on $\beta$ helps here to improve the models.
+
+\textcolor{red}{Ce dernier point est peut-etre a illustrer}.
+
+Figure~\ref{fig:pp_D} illsutrates the behavior of the conjugate LDA model wrt to the standard LDA model (with symmetric priors estimated via the EM type 2 procedure). The perplexity is averaged over 10 runs to assess the influence of the random initilization of the parameters. 
+
+We then compared then the perplexity on several subset of training and testing and for various values of $K$, the number of topics. In figure \ref{fig:pp_D} we compute the ratio of perplexity to the two model. It shows a light tendancy of the model to be better for smaller corpora and to approach LDA performance when it increases. This is especially true for the 20 news group corpora, who maybe fit the assumptions behind the boojum in term of how his features are distributed. 
 
 \begin{figure}[h]
 \label{fig:pp_D}
 %\vspace{.3in}
 \includegraphics[width=9cm, height=14cm]{results/pp_D.eps}
 %\vspace{.3in}
-\caption{Ratio of perplexity of boojum LDA over classical LDA on several size of dataset and for different number of topic}
+\caption{Ratio of perplexity of the conjugate LDA model over the standard LDA model on several size of dataset and for different number of topic}
 \end{figure}
 
 The figure \ref{fig:pp_conv}, show a particular case of leaning convergence for the 20 news group. We can see that the our model converge better and faster than LDA in this case. 
