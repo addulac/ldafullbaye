@@ -19,10 +19,13 @@ We have compared several variants of the LDA model according to the previous dev
 %
 The best combination is obtained with a fixed asymmetric prior on $\alpha$ and a Boojum on $\beta$. In the remainder, we refer to this model as {\it conjugate LDA} ({\it ldaconjugate} for short). Both the Boojum prior and the asymmetric prior on $\alpha$ yield better results than the symmetric one, in acordance with the results obtained in \cite{wallach_rethinking_2009} which illustrate the imporatnce of an asymmetric prior on the document-topic distribution. Furthermore, the Boojum prior on $\beta$ helps here to improve the models.
 
-\textcolor{red}{Ce dernier point est peut-etre a illustrer}.
+Figure~\ref{fig:1} illustrates the behavior of the conjugate LDA model wrt to the standard LDA model (with symmetric priors estimated via the EM type 2 procedure). The perplexity is averaged over 10 runs to assess the influence of the random initilization of the parameters. The number of topics is set to 6 and the number of documents to 1000. As one can note, the perplexity of the conjugate model is lower than the one of the standard model, and decreases with the number of iterations, as expected.
 
-Figure~\ref{fig:pp_D} illsutrates the behavior of the conjugate LDA model wrt to the standard LDA model (with symmetric priors estimated via the EM type 2 procedure). The perplexity is averaged over 10 runs to assess the influence of the random initilization of the parameters. 
+Figure~\ref{fig:2} shows how the conjugate LDA model behaves, compared to the standard LDA model, with respect to the size of the collection. Here again, the number of topics $K$ is set to 6. As one can note, the ratio of perplexity is below 1 when the size of the collections is small (roughly below 3000 documents), and above 1 after that. This indicates that the conjugate LDA model compares favorably to the standard model for small collections, which can be explained by the additional information brought by the prior on such collections (the influence of the prior then decreases with the size of the collection). For higher values of $K$, a similar tendency is obtained, but the difference between the models vanishes for $K \ge 30$ in our experiments.
 
+Figure~\ref{fig:3} ilsutrates the impact of the Boojum prior on the word-topic distribution. ???
+
+Lastly, Figure~\ref{fig:time} compares the execution time of the inference procedures for the two models for $K=20$. Similar plots are obtained for different values of $K$. As one can note, there is no significant difference between the inference in the conjugate and the standard models.
 
 \begin{figure}[h]
 \label{fig:pp_D}
@@ -32,15 +35,11 @@ Figure~\ref{fig:pp_D} illsutrates the behavior of the conjugate LDA model wrt to
 \caption{Ratio of perplexity of the conjugate LDA model over the standard LDA model on several size of dataset and for different number of topic}
 \end{figure}
 
-The figure \ref{fig:pp_conv}, show a particular case of leaning convergence for the 20 news group. We can see that the our model converge better and faster than LDA in this case. 
-
 \begin{figure}[h]
 \label{fig:pp_conv}
 \includegraphics[scale=0.4]{results/pp_conv.eps}
 \caption{Result of perplecity on testing set at each iterations of the variationnal bayes iteratino for the 20 news group corpus}
 \end{figure}
-
-Finally, the complexity of the update for the boojum in this case add no complexity compared to LDA fitting as suggested in figure \ref{fig:time}
 
 \begin{figure}[h]
 \label{fig:time}
