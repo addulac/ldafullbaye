@@ -3,7 +3,7 @@
         \begin{tabular}{ | l | l | l | l | p{5cm} |}
             \hline
             Name & Documents & Features & classes\\ \hline
-            20newsgroup & 18000 & 43496 & 6/20 \\ \hline
+            20newsgroups & 18000 & 43496 & 6/20 \\ \hline
             reuter50 & 5000 & 29823 & 50 \\ \hline
             \hline
         \end{tabular}
@@ -14,7 +14,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Results} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In order to evaluate our proposal, we ran experiments over two standard corpora, namely: 20Newsgroup\footnote{http://qwone.com/\~jason/20Newsgroups} and Reuter50\footnote{https://archive.ics.uci.edu/ml/datasets/Reuter\_50\_50}.
+In order to evaluate our proposal, we ran experiments over two standards corpora, namely: 20Newsgroups\footnote{http://qwone.com/\~\ jason/20Newsgroups} and Reuter50\footnote{https://archive.ics.uci.edu/ml/datasets/Reuter\_50\_50}.
 %The first one consists of 13000 messages taken from 20 newsgroups, whereas the second one contains 5000 documents authored by 50 different authors. 
 Table~\ref{table:dataset} summarises the characteristics of the two corpora. Each corpus is divided in a training and test set with a ratio 80-20 percent. Models are evaluated according to their perplexity on the test set and we follow here the  approach of \cite{asuncion_smoothing_2009} based on the following fold-in procedure: the topic-word distribution is learned on the training set and considered fixed, whereas the document-topic distribution is learned for each document of the test set, by using the first half of the document only. The perplexity is then computed on each test document, then averaged over all test documents, using:
 \begin{eqnarray*}
@@ -28,9 +28,9 @@ The best combination is obtained with a fixed asymmetric prior on $\alpha$ and f
 
 \begin{figure}[ht]
 \includegraphics[scale=0.4]{results/pp_conv}
-\caption{\label{fig:pp-exple}Evolution of perplexity on the test sets according to the number of iterations of the variational Bayes methods for both conjugate and standard LDA, on 20Newsgroup.}
+\caption{\label{fig:pp-exple}Evolution of perplexity on the test sets according to the number of iterations of the variational Bayes methods for both conjugate and standard LDA, on 20Newsgroups.}
 \end{figure}
-Figure~\ref{fig:pp-exple} illustrates the behaviour of the conjugate LDA model wrt to the standard LDA model (with symmetric priors estimated via the EM type 2 procedure). The perplexity is averaged over 10 runs to assess the influence of the random initialisation of the parameters. The number of topics is set to 6 and the number of documents to 1000. Observe that the perplexity of the full conjugacy model is lower than that of the standard model, and decreases with the number of iterations, as expected. Full conjugacy on the word-topic side leads to a higher decrease in perplexity.
+Figure~\ref{fig:pp-exple} illustrates the behaviour of the conjugate LDA model wrt to the standard LDA model (with asymmetric priors estimated via the EM type 2 procedure). The perplexity is averaged over 10 runs to assess the influence of the random initialisation of the parameters as finding a global otpima is not guarantiee. The number of topics is set to 6 and the number of documents to 2000. Observe that the perplexity of the full conjugacy model is lower than that of the standard model, and decreases with the number of iterations, as expected. Full conjugacy on the word-topic side leads to a higher decrease in perplexity.
 
 \begin{figure}[ht]
 \includegraphics[width=9cm, height=14cm]{results/pp_D}
