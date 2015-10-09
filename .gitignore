@@ -12,3 +12,5 @@
 *.synctex.gz
 *~
 *.pdf
+*.ps
+
