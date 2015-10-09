@@ -30,7 +30,7 @@ where the expectation is taken over the set $\neg X$ of all the independent vari
 \end{eqnarray}
 The right-hand side of~(\ref{eqn:vbcore-Dirac}) is the mode of the right-hand side distribution in~(\ref{eqn:vbcore}), since the closest Dirac approximation of any distribution is the Dirac at its mode.
 
-In the case of the LDA model, it is well known that the choice of conjugate (Dirichlet) priors for variables $\vmDK_{DK}$ and $\vmKW_{KW}$ lead to update rules~(\ref{eqn:vbcore}) which {\em naturally} constrain the variational distributions to the following forms\footnote{To avoid a proliferation of Greek letters, we denote the variational parameters with the same letter as the corresponding model variables, decorated with a dot.}:
+In the case of the LDA model, it is well known that the choice of conjugate (Dirichlet) priors for variables $\vmDK_{DK}$ and $\vmKW_{KW}$ lead to update rules~(\ref{eqn:vbcore}) which {\em naturally} constrain the variational distributions to also be in that conjugate class\footnote{To avoid a proliferation of Greek letters, we denote the variational parameters with the same letter as the corresponding model variables, decorated with a dot.}:
 \[
 \begin{array}{l@{\hspace{.3cm}}l}
 \forall d\in D& \dot{q}_d(\vmDK_K) = \mathbf{Dirichlet}(\vmDK_K;\vvmDK_{dK}) \\
